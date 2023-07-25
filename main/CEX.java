@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 
 public class CEX {
     Map<String, Asset> assetMap;
+    int LTokenPrice;
     public CEX() {}
 
     public void init() {
@@ -16,6 +17,7 @@ public class CEX {
         this.assetMap.put("c", new Asset());
         this.assetMap.put("d", new Asset());
         this.assetMap.put("e", new Asset());
+        this.LTokenPrice = 500;
     }
 
     public void purchase(String assetKey, String tokenType, int quantity) throws Exception {
@@ -23,6 +25,8 @@ public class CEX {
 
         if(tokenType.equals("SToken")) {
             target.purchaseSToken(quantity);
+        } else if(tokenType.equals("LToken")) {
+            target.purchaseLToken(quantity, this.LTokenPrice);
         }
     }
 
@@ -35,6 +39,17 @@ public class CEX {
     }
 
     public Map<String, Asset> getAssetMap() { return this.assetMap; }
+
+    public int getLTokenPrice () { return this.LTokenPrice; }
+
+    public String toString() {
+        return """
+                CEX {
+                    LTokenPrice: %s,
+                    assetMap: %s
+                }
+                """.formatted(this.LTokenPrice, this.assetMap);
+    }
 
     public class Asset {
         private int money;
@@ -77,6 +92,17 @@ public class CEX {
                 this.money = this.money + price;
             } else {
                 throw new Exception("you have lower SToken then input quantity");
+            }
+            return true;
+        }
+
+        public boolean purchaseLToken(int quantity, int LTokenPrice) throws Exception {
+            int price = quantity * LTokenPrice;
+            if(price <= this.money) {
+                this.LToken = this.LToken + quantity;
+                this.money = this.money - price;
+            }else {
+                throw new Exception("money is loser then price.");
             }
             return true;
         }
