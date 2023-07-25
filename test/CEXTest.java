@@ -11,6 +11,7 @@ public class CEXTest {
         aPurchase200SToken();
         aSale20SToken();
         aPurchase10LToken();
+        aSale5LToken();
     }
 
     // cex init will return 5 Assets = [a, b, c, d, e]
@@ -34,7 +35,7 @@ public class CEXTest {
         System.out.println("a의 현금 보유액 200000원: " + (userA.getMoney() == 200000));
         System.out.println("a의 보유 SToken 0개: " + (userA.getSToken() == 0));
         System.out.println("a의 보유 LToken 0개: " + (userA.getLToken() == 0));
-        System.out.println("***** CEX 초기화 끝 값 확인 완료 *****");
+        System.out.println("***** CEX 초기화 완료 *****");
         System.out.println("");
     }
 
@@ -68,6 +69,17 @@ public class CEXTest {
         System.out.println("a의 현금 보유액은 15000원: " + (userA.getMoney() == 15000));
         System.out.println("a의 보유 LToken은 10개: " + (userA.getLToken() == 10));
         System.out.println("***** 10 LToken 구매 테스트 완료 *****");
+        System.out.println("");
+    }
+
+    static void aSale5LToken() throws Exception {
+        System.out.println("***** CEX에서 A지갑이 5개의 LToken을 판매하는 테스트 시작 *****");
+
+        cex.sale("a", "LToken", 5);
+
+        System.out.println("a의 현금 보유액은 17500원: " + (userA.getMoney() == 17500));
+        System.out.println("a의 보유 LToken은 5개: " + (userA.getLToken() == 5));
+        System.out.println("***** 5 LToken 판매 테스트 완료 *****");
         System.out.println("");
     }
 }

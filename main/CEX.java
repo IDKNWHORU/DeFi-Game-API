@@ -35,6 +35,8 @@ public class CEX {
 
         if(tokenType.equals("SToken")) {
             target.saleSToken(quantity);
+        } else if(tokenType.equals("LToken")) {
+            target.saleLToken(quantity, this.LTokenPrice);
         }
     }
 
@@ -104,6 +106,18 @@ public class CEX {
             }else {
                 throw new Exception("money is loser then price.");
             }
+            return true;
+        }
+
+        public boolean saleLToken(int quantity, int LTokenPrice) throws Exception {
+            int price = quantity * LTokenPrice;
+            if(quantity <= this.LToken) {
+                this.LToken = this.LToken - quantity;
+                this.money = this.money + price;
+            } else {
+                throw new Exception("you have lower LToken then input quantity");
+            }
+
             return true;
         }
 
