@@ -22,13 +22,23 @@ public class PrivateWalletService {
 
     public Map<String, Wallet> getWalletMap() { return this.walletMap; }
 
-    public void put(String accessKey, String tokenType, int quantity){
+    public void add(String accessKey, String tokenType, int quantity){
         Wallet wallet = this.walletMap.get(accessKey);
 
         if(tokenType.equals("SToken")) {
-            wallet.putSToken(quantity);
+            wallet.addSToken(quantity);
         } else if(tokenType.equals("LToken")) {
-            wallet.putLToken(quantity);
+            wallet.addLToken(quantity);
+        }
+    }
+
+    public void minus(String accessKey, String tokenType, int quantity) throws Exception {
+        Wallet wallet = this.walletMap.get(accessKey);
+
+        if(tokenType.equals("SToken")) {
+            wallet.minusSToken(quantity);
+        } else if(tokenType.equals("LToken")) {
+            wallet.minusLToken(quantity);
         }
     }
 
@@ -52,12 +62,28 @@ public class PrivateWalletService {
         public int getSToken() { return this.SToken; }
         public int getLToken() { return this.LToken; }
 
-        public void putSToken(int quantity) {
+        public void addSToken(int quantity) {
             this.SToken += quantity;
         }
 
-        public void putLToken(int quantity) {
+        public void addLToken(int quantity) {
             this.LToken += quantity;
+        }
+
+        public void minusSToken(int quantity) throws Exception{
+            if(quantity <= this.SToken) {
+                this.SToken -= quantity;
+            } else {
+                throw new Exception("Your wallet balance of SToken is insufficient for the input quantity.");
+            }
+        }
+
+        public void minusLToken(int quantity) throws Exception {
+            if(quantity <= this.LToken) {
+                this.LToken -= quantity;
+            } else {
+                throw new Exception("Your wallet balance of LToken is insufficient for the input quantity.");
+            }
         }
 
         public String toString() {

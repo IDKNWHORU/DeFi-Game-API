@@ -2,7 +2,6 @@ package main;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class CEX {
     private Map<String, Asset> assetMap;
@@ -45,6 +44,18 @@ public class CEX {
         }
     }
 
+    public void deposit(String accessKey, String tokenType, int quantity) throws Exception {
+        Asset target = this.getAssetMap().get(accessKey);
+
+        pws.minus(accessKey, tokenType, quantity);
+
+        if(tokenType.equals("SToken")) {
+            target.depositSToken(quantity);
+        } else if(tokenType.equals("LToken")) {
+            target.depositLToken(quantity);
+        }
+    }
+
     public void withDraw(String accessKey, String tokenType, int quantity) throws Exception {
         Asset target = this.getAssetMap().get(accessKey);
 
@@ -54,7 +65,7 @@ public class CEX {
             target.withDrawLToken(quantity);
         }
 
-        this.pws.put(accessKey, tokenType, quantity);
+        this.pws.add(accessKey, tokenType, quantity);
     }
 
     public Map<String, Asset> getAssetMap() { return this.assetMap; }
@@ -96,10 +107,10 @@ public class CEX {
         public boolean purchaseSToken(int quantity) throws Exception {
             int price = quantity * 1000;
             if(price <= this.money) {
-                this.SToken = this.SToken + quantity;
-                this.money = this.money - price;
+                this.SToken += quantity;
+                this.money -= price;
             } else {
-                throw new Exception("money is lower then price");
+                throw new Exception("Your asset's money are insufficient for the input quantity.");
             }
             return true;
         }
@@ -107,10 +118,10 @@ public class CEX {
         public boolean saleSToken(int quantity) throws Exception{
             int price = quantity * 1000;
             if(quantity <= this.SToken) {
-                this.SToken = this.SToken - quantity;
-                this.money = this.money + price;
+                this.SToken -= quantity;
+                this.money += price;
             } else {
-                throw new Exception("you have lower SToken then input quantity");
+                throw new Exception("Your asset's SToken balance is insufficient for the input quantity.");
             }
             return true;
         }
@@ -118,10 +129,10 @@ public class CEX {
         public boolean purchaseLToken(int quantity, int LTokenPrice) throws Exception {
             int price = quantity * LTokenPrice;
             if(price <= this.money) {
-                this.LToken = this.LToken + quantity;
-                this.money = this.money - price;
+                this.LToken += quantity;
+                this.money -= price;
             }else {
-                throw new Exception("money is loser then price.");
+                throw new Exception("Your asset's money are insufficient for the input quantity.");
             }
             return true;
         }
@@ -129,30 +140,46 @@ public class CEX {
         public boolean saleLToken(int quantity, int LTokenPrice) throws Exception {
             int price = quantity * LTokenPrice;
             if(quantity <= this.LToken) {
-                this.LToken = this.LToken - quantity;
-                this.money = this.money + price;
+                this.LToken -= quantity;
+                this.money += price;
             } else {
-                throw new Exception("you have lower LToken then input quantity");
+                throw new Exception("Your asset's LToken balance is insufficient for the input quantity.");
             }
 
             return true;
         }
 
+        public boolean depositSToken(int quantity) {
+            this.SToken += quantity;
+
+            return true;
+        }
+
+        public boolean depositLToken(int quantity) {
+            this.LToken += quantity;
+
+            return true;
+        }
+
         public boolean withDrawSToken(int quantity) throws Exception {
-            if(quantity + 2 <= this.SToken) {
-                this.SToken = this.SToken - (quantity + 2);
+            int STokenAmountWithFee = quantity + 2;
+
+            if(STokenAmountWithFee <= this.SToken) {
+                this.SToken -= STokenAmountWithFee;
             } else {
-                throw new Exception("you have lower SToken than input quantity");
+                throw new Exception("Your asset's SToken balance is insufficient for the input quantity.");
             }
 
             return true;
         }
 
         public boolean withDrawLToken(int quantity) throws Exception {
-            if(quantity + 4 <= this.LToken) {
-                this.LToken = this.LToken - (quantity + 4);
+            int LTokenAmountWithFee = quantity + 4;
+
+            if(LTokenAmountWithFee <= this.LToken) {
+                this.LToken -= LTokenAmountWithFee;
             } else {
-                throw new Exception("you have lower LToken than input quantity");
+                throw new Exception("Your asset's LToken balance is insufficient for the input quantity.");
             }
 
             return true;
