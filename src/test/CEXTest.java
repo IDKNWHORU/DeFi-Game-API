@@ -7,15 +7,17 @@ public class CEXTest {
     static CEX.Asset userA;
 
     public static void main(String... args) throws Exception {
-        checkInitialize();
+        checkInitializeCEX();
         aPurchase200SToken();
         aSale20SToken();
         aPurchase10LToken();
         aSale5LToken();
+        aWithDraw100SToken();
+        aWidthDraw1LToken();
     }
 
     // cex init will return 5 Assets = [a, b, c, d, e]
-    static void checkInitialize() {
+    static void checkInitializeCEX() {
         System.out.println("***** 게임 시작할 때 CEX 초기화 *****");
         System.out.println("");
         cex.init();
@@ -80,6 +82,31 @@ public class CEXTest {
         System.out.println("a의 현금 보유액은 17500원: " + (userA.getMoney() == 17500));
         System.out.println("a의 보유 LToken은 5개: " + (userA.getLToken() == 5));
         System.out.println("***** 5 LToken 판매 테스트 완료 *****");
+        System.out.println("");
+    }
+
+    static void aWithDraw100SToken() throws Exception {
+        System.out.println("***** CEX에서 A지갑이 100개의 SToken을 출금하는 테스트 시작 *****");
+
+        System.out.println("출금 전 a의 보유 SToken: " + userA.getSToken());
+
+        cex.withDraw("a", "SToken", 100);
+
+        System.out.println("100개의 SToken 출금 후 a의 보유 SToken 78개: " + (userA.getSToken() == 78));
+        System.out.println("100개의 Stoken 출금 후 a의 개인 지갑 보유 SToken 100개: ");
+        System.out.println("***** 100 SToken 출금 테스트 완료 *****");
+        System.out.println("");
+    }
+
+    static void aWidthDraw1LToken() throws Exception {
+        System.out.println("***** CEX에서 A지갑이 1개의 LToken을 출금하는 테스트 시작 *****");
+
+        System.out.println("출금 전 a의 보유 LToken: " + userA.getLToken());
+
+        cex.withDraw("a", "LToken", 1);
+
+        System.out.println("1개의 LToken 출금 후 a의 보유 LToken 0개: " + (userA.getLToken() == 0));
+        System.out.println("***** 1 LToken 출금 테스트 완료 *****");
         System.out.println("");
     }
 }

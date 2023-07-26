@@ -40,6 +40,16 @@ public class CEX {
         }
     }
 
+    public void withDraw(String accessKey, String tokenType, int quantity) throws Exception {
+        Asset target = this.getAssetMap().get(accessKey);
+
+        if(tokenType.equals("SToken")) {
+            target.withDrawSToken(quantity);
+        } else if(tokenType.equals("LToken")) {
+            target.withDrawLToken(quantity);
+        }
+    }
+
     public Map<String, Asset> getAssetMap() { return this.assetMap; }
 
     public int getLTokenPrice () { return this.LTokenPrice; }
@@ -121,6 +131,26 @@ public class CEX {
             return true;
         }
 
+        public boolean withDrawSToken(int quantity) throws Exception {
+            if(quantity + 2 <= this.SToken) {
+                this.SToken = this.SToken - (quantity + 2);
+            } else {
+                throw new Exception("you have lower SToken than input quantity");
+            }
+
+            return true;
+        }
+
+        public boolean withDrawLToken(int quantity) throws Exception {
+            if(quantity + 4 <= this.LToken) {
+                this.LToken = this.LToken - (quantity + 4);
+            } else {
+                throw new Exception("you have lower LToken than input quantity");
+            }
+
+            return true;
+        }
+
         public String toString() {
             return """
                     Asset {
@@ -130,5 +160,6 @@ public class CEX {
                     }
                     """.formatted(this.money, this.SToken, this.LToken);
         }
+
     }
 }
