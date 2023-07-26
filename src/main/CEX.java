@@ -1,6 +1,8 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CEX {
@@ -14,7 +16,7 @@ public class CEX {
     }
 
     public void init() {
-        this.assetMap = new HashMap();
+        this.assetMap = new HashMap<>();
 
         this.assetMap.put("a", new Asset());
         this.assetMap.put("b", new Asset());
@@ -72,6 +74,12 @@ public class CEX {
 
     public int getLTokenPrice () { return this.LTokenPrice; }
 
+    public void stake(String accessKey, int quantity) throws Exception{
+        Asset target = this.getAssetMap().get(accessKey);
+
+        target.stake(quantity);
+    }
+
     public String toString() {
         return """
                 CEX {
@@ -85,11 +93,13 @@ public class CEX {
         private int money;
         private int SToken;
         private int LToken;
+        private final List<StakeManager> stakeList;
 
         Asset() {
             this.money = 200000;
             this.SToken = 0;
             this.LToken = 0;
+            this.stakeList = new ArrayList<>();
         }
 
         public int getMoney() {
@@ -103,6 +113,8 @@ public class CEX {
         public int getLToken() {
             return this.LToken;
         }
+
+        public List<StakeManager> getStakeList() { return this.stakeList; }
 
         public boolean purchaseSToken(int quantity) throws Exception {
             int price = quantity * 1000;
@@ -185,15 +197,58 @@ public class CEX {
             return true;
         }
 
+        public boolean stake(int amount) throws Exception{
+            if(amount % 20 != 0) {
+                throw new Exception("You can Stake in increments of 20 SToken.");
+            }
+
+            if(amount <= this.SToken) {
+                this.SToken -= amount;
+                this.stakeList.add(new StakeManager(amount));
+            } else {
+                throw new Exception("Your asset's SToken balance is insufficient for the input quantity.");
+            }
+
+            return true;
+        }
+
         public String toString() {
             return """
                     Asset {
                         money: %s,
                         SToken: %s,
-                        LToken: %s
+                        LToken: %s,
+                        StakeList: %s
                     }
-                    """.formatted(this.money, this.SToken, this.LToken);
+                    """.formatted(this.money, this.SToken, this.LToken, this.stakeList);
         }
 
+    }
+
+    public class StakeManager {
+        private final int stakeAmount;
+        private final int feeAmount;
+
+        StakeManager(int stakeAmount) {
+            this.stakeAmount = stakeAmount;
+            this.feeAmount = 0;
+        }
+
+        public int getStakeAmount() {
+            return this.stakeAmount;
+        }
+
+        public int getFeeAmount() {
+            return this.feeAmount;
+        }
+
+        public String toString() {
+            return """
+                    class StakeManager {
+                        stakeAmount: %s,
+                        feeAmount: %s
+                    }
+                    """.formatted(this.stakeAmount, this.feeAmount);
+        }
     }
 }
