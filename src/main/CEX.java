@@ -5,9 +5,14 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class CEX {
-    Map<String, Asset> assetMap;
-    int LTokenPrice;
+    private Map<String, Asset> assetMap;
+    private int LTokenPrice;
+    private PrivateWalletService pws;
     public CEX() {}
+
+    public void setPrivateWalletService(PrivateWalletService pws) {
+        this.pws = pws;
+    }
 
     public void init() {
         this.assetMap = new HashMap();
@@ -48,6 +53,8 @@ public class CEX {
         } else if(tokenType.equals("LToken")) {
             target.withDrawLToken(quantity);
         }
+
+        this.pws.put(accessKey, tokenType, quantity);
     }
 
     public Map<String, Asset> getAssetMap() { return this.assetMap; }
