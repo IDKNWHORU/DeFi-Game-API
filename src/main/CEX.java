@@ -74,10 +74,20 @@ public class CEX {
 
     public int getLTokenPrice () { return this.LTokenPrice; }
 
-    public void stake(String accessKey, int quantity) throws Exception{
+    public void stake(String accessKey, int quantity) throws Exception {
         Asset target = this.getAssetMap().get(accessKey);
 
         target.stake(quantity);
+    }
+
+    public void unStake(String accessKey) throws Exception {
+        Asset target = this.getAssetMap().get(accessKey);
+
+        target.unStake();
+    }
+
+    public void changeLTokenPrice(int quantity) {
+        this.LTokenPrice += quantity;
     }
 
     public String toString() {
@@ -197,9 +207,9 @@ public class CEX {
             return true;
         }
 
-        public boolean stake(int amount) throws Exception{
+        public boolean stake(int amount) throws Exception {
             if(amount % 20 != 0) {
-                throw new Exception("You can Stake in increments of 20 SToken.");
+                throw new Exception("You can stake in increments of 20 SToken.");
             }
 
             if(amount <= this.SToken) {
@@ -208,6 +218,18 @@ public class CEX {
             } else {
                 throw new Exception("Your asset's SToken balance is insufficient for the input quantity.");
             }
+
+            return true;
+        }
+
+        public boolean unStake() throws Exception {
+            if(this.stakeList.size() == 0) {
+                throw new Exception("You don't have stake amount.");
+            }
+
+            StakeManager sm = this.stakeList.get(0);
+            this.SToken +=  sm.getStakeAmount() + sm.getFeeAmount();
+            this.stakeList.remove(0);
 
             return true;
         }

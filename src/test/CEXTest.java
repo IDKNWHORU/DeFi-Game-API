@@ -26,12 +26,14 @@ public class CEXTest {
         aDeposit1LToken();
         aStake20();
         aStake21Exception();
+        aUnStake20();
+        increase50LTokenValue();
+        decrease50LTokenValue();
     }
 
     // cex init will return 5 Assets = [a, b, c, d, e]
     static void checkInitializeCEX() {
         System.out.println(highlightTitle(highlightTitle("***** 게임 시작할 때 CEX 초기화 *****")));
-        System.out.println("");
         cex.setPrivateWalletService(pws);
         cex.init();
         System.out.println("CEX에 정의된 자산(사용자 자산) 카운트: "+ cex.getAssetMap().size());
@@ -119,7 +121,7 @@ public class CEXTest {
         System.out.println("");
     }
 
-    static void aWidthDraw1LTokenException() throws Exception {
+    static void aWidthDraw1LTokenException() {
         System.out.println(highlightTitle("***** CEX에서 사용자 A의 LToken 출금 초과 에러 발생 테스트 시작 *****"));
 
         System.out.println("출금 전 a의 보유 LToken: " + userA.getLToken());
@@ -136,7 +138,6 @@ public class CEXTest {
 
     static void checkInitializePrivateWallet() {
         System.out.println(highlightTitle("***** 게임 시작할 때 개인 지갑 서비스 초기화 시작 *****"));
-        System.out.println("");
         pws.initialize();
 
         System.out.println("개인 지갑 카운트 5개: "+ (pws.getWalletMap().size() == 5));
@@ -176,10 +177,10 @@ public class CEXTest {
         System.out.println("");
     }
 
-    static void aStake20() throws Exception{
+    static void aStake20() throws Exception {
         System.out.println(highlightTitle("***** CEX에서 사용자 A의 20개의 SToken 스테이크 테스트 시작 *****"));
 
-        System.out.println("입금 전 a의 보유 SToken: " + userA.getSToken());
+        System.out.println("스테이크 전 a의 보유 SToken: " + userA.getSToken());
         cex.stake("a", 20);
 
         CEX.StakeManager userAStake = userA.getStakeList().get(0);
@@ -190,10 +191,10 @@ public class CEXTest {
         System.out.println("");
     }
 
-    static void aStake21Exception() throws Exception{
+    static void aStake21Exception() {
         System.out.println(highlightTitle("***** CEX에서 사용자 A의 21개의 SToken 스테이크 에러 발생 테스트 시작 *****"));
 
-        System.out.println("입금 전 a의 보유 SToken: " + userA.getSToken());
+        System.out.println("스테이크 전 a의 보유 SToken: " + userA.getSToken());
 
         try {
             cex.stake("a", 21);
@@ -204,6 +205,38 @@ public class CEXTest {
         System.out.println("20개의 SToken 스테이크 후 a의 보유 SToken 68개: " + booleanValue(userA.getSToken() == 68));
         System.out.println(highlightTitle("***** 20 SToken 스테이크 에러 테스트 완료 *****"));
         System.out.println("");
+    }
+
+    static void aUnStake20() throws Exception {
+        System.out.println(highlightTitle("***** CEX에서 사용자 A의 20개의 SToken 언스테이크 테스트 시작 *****"));
+        System.out.println("언스테이크 전 a의 보유 SToken: " + userA.getSToken());
+
+        cex.unStake("a");
+
+        System.out.println("언스테이크 후 a의 보유 SToken 88개 : " + booleanValue(userA.getSToken() == 88));
+        System.out.println("언스테이크 후 a의 보유 스테이크 목록 0개 : " + booleanValue(userA.getStakeList().size() == 0));
+        System.out.println(highlightTitle("***** 20 SToken 언스테이크 테스트 완료 *****"));
+        System.out.println("");
+    }
+
+    static void increase50LTokenValue() {
+        System.out.println(highlightTitle("***** CEX LToken 가치를 50 상승하는 테스트 시작 *****"));
+        System.out.println("증가 전 CEX LToken 가치: " + cex.getLTokenPrice());
+
+        cex.changeLTokenPrice(50);
+        System.out.println("증가 후 CEX LToken 가치 550 : " + booleanValue(cex.getLTokenPrice() == 550));
+
+        System.out.println(highlightTitle("***** LToken 가치를 50 상승하는 테스트 완료 *****"));
+    }
+
+    static void decrease50LTokenValue() {
+        System.out.println(highlightTitle("***** CEX LToken 가치를 50 감소하는 테스트 시작 *****"));
+        System.out.println("감소 전 CEX LToken 가치: " + cex.getLTokenPrice());
+
+        cex.changeLTokenPrice(-50);
+        System.out.println("감소 후 CEX LToken 가치 500 : " + booleanValue(cex.getLTokenPrice() == 500));
+
+        System.out.println(highlightTitle("***** LToken 가치를 50 상승하는 테스트 완료 *****"));
     }
 
     static String errorMessage(String msg) {
