@@ -264,12 +264,16 @@ public class CEXTest {
         System.out.println(highlightTitle("***** CEX 다음 라운드 이벤트 (LToken100 감소) 테스트 시작 *****"));
         System.out.println("이번트 발생 전 CEX LToken 가치: " + cex.getLTokenPrice());
 
+        cex.stake("a", 40);
+
+        System.out.println(userA.getStakeList());
         System.out.println("사용자 A 20 스테이크 수 1: " + booleanValue(userA.getStakeList().size() == 1));
 
         cex.triggerNextRound(-100);
         System.out.println("이번트 발생 후 CEX LToken 가치 450: " + booleanValue(cex.getLTokenPrice() == 450));
         System.out.println("이벤트 발생 후 사용자 A의 스테이크 20: " + booleanValue(userA.getStakeList().get(0).getStakeAmount() == 20));
         System.out.println("이벤트 발생 후 사용자 A의 스테이크 Fee 6: " + booleanValue(userA.getStakeList().get(0).getFeeAmount() == 6));
+        System.out.println("이벤트 발생 후 사용자 A의 스테이크 목록: " + userA.getStakeList());
 
         System.out.println(highlightTitle("***** 다음 라운드 이벤트 테스트 완료 *****"));
         System.out.println("");

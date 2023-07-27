@@ -223,8 +223,10 @@ public class CEX {
             }
 
             if(amount <= this.SToken) {
-                this.SToken -= amount;
-                this.stakeList.add(new StakeManager(amount));
+                for(int count=0; count < amount / 20; count++) {
+                    this.SToken -= amount;
+                    this.stakeList.add(new StakeManager(20));
+                }
             } else {
                 throw new Exception("Your asset's SToken balance is insufficient for the input quantity.");
             }
@@ -278,7 +280,7 @@ public class CEX {
 
         public String toString() {
             return """
-                    class StakeManager {
+                    StakeManager {
                         stakeAmount: %s,
                         feeAmount: %s
                     }
