@@ -90,6 +90,16 @@ public class CEX {
         this.LTokenPrice += quantity;
     }
 
+    public void triggerNextRound(int quantity) {
+        changeLTokenPrice(quantity);
+
+        getAssetMap().forEach((_a, asset) -> {
+            asset.getStakeList().forEach((sm) -> {
+                sm.addFeeAmount();
+            });
+        });
+    }
+
     public String toString() {
         return """
                 CEX {
@@ -249,7 +259,7 @@ public class CEX {
 
     public class StakeManager {
         private final int stakeAmount;
-        private final int feeAmount;
+        private int feeAmount;
 
         StakeManager(int stakeAmount) {
             this.stakeAmount = stakeAmount;
@@ -263,6 +273,8 @@ public class CEX {
         public int getFeeAmount() {
             return this.feeAmount;
         }
+
+        public void addFeeAmount() { this.feeAmount += (this.stakeAmount * 0.15); }
 
         public String toString() {
             return """
