@@ -245,14 +245,14 @@ public class CEXTest {
 
     static void nextRoundIncrease50LTokenAndStakeFeeAmount() throws Exception {
         System.out.println(highlightTitle("***** CEX 다음 라운드 이벤트 (LToken50 증가) 테스트 시작 *****"));
-        System.out.println("이번트 발생 전 CEX LToken 가치: " + cex.getLTokenPrice());
+        System.out.println("이벤트 발생 전 CEX LToken 가치: " + cex.getLTokenPrice());
         System.out.println("사용자 A 20 스테이크 전 개수: " + userA.getStakeList().size());
 
         cex.stake("a", 20);
-        System.out.println("사용자 A 20 스테이크 후 개수 1: " + booleanValue(userA.getStakeList().size() == 1));
+        System.out.println("사용자 A 20 스테이크 후 개수 1: " + booleanV트alue(userA.getStakeList().size() == 1));
 
         cex.triggerNextRound(50);
-        System.out.println("이번트 발생 후 CEX LToken 가치 550: " + booleanValue(cex.getLTokenPrice() == 550));
+        System.out.println("이벤트 발생 후 CEX LToken 가치 550: " + booleanValue(cex.getLTokenPrice() == 550));
         System.out.println("이벤트 발생 후 사용자 A의 스테이크 20: " + booleanValue(userA.getStakeList().get(0).getStakeAmount() == 20));
         System.out.println("이벤트 발생 후 사용자 A의 스테이크 Fee 3: " + booleanValue(userA.getStakeList().get(0).getFeeAmount() == 3));
 
@@ -262,7 +262,7 @@ public class CEXTest {
 
     static void nextRoundDecrease100LTokenAndStakeFeeAmount() throws Exception {
         System.out.println(highlightTitle("***** CEX 다음 라운드 이벤트 (LToken100 감소) 테스트 시작 *****"));
-        System.out.println("이번트 발생 전 CEX LToken 가치: " + cex.getLTokenPrice());
+        System.out.println("이벤트 발생 전 CEX LToken 가치: " + cex.getLTokenPrice());
 
         cex.stake("a", 40);
 
@@ -270,7 +270,7 @@ public class CEXTest {
         System.out.println("사용자 A 20 스테이크 수 1: " + booleanValue(userA.getStakeList().size() == 1));
 
         cex.triggerNextRound(-100);
-        System.out.println("이번트 발생 후 CEX LToken 가치 450: " + booleanValue(cex.getLTokenPrice() == 450));
+        System.out.println("이벤트 발생 후 CEX LToken 가치 450: " + booleanValue(cex.getLTokenPrice() == 450));
         System.out.println("이벤트 발생 후 사용자 A의 스테이크 20: " + booleanValue(userA.getStakeList().get(0).getStakeAmount() == 20));
         System.out.println("이벤트 발생 후 사용자 A의 스테이크 Fee 6: " + booleanValue(userA.getStakeList().get(0).getFeeAmount() == 6));
         System.out.println("이벤트 발생 후 사용자 A의 스테이크 목록: " + userA.getStakeList());
@@ -279,11 +279,11 @@ public class CEXTest {
         System.out.println("");
     }
 
-    static String errorMessage(String msg) {
+    public static String errorMessage(String msg) {
         return "\u001B[31m" + msg + "\u001B[0m";
     }
 
-    static String booleanValue(boolean value) {
+    public static String booleanValue(boolean value) {
         if(value) {
             return "\u001B[32m"+ true +"\u001B[0m";
         } else {
@@ -291,7 +291,7 @@ public class CEXTest {
         }
     }
 
-    static String highlightTitle(String title) {
+    public static String highlightTitle(String title) {
         return "\u001B[42m" + "\u001B[30m" +title + "\u001B[0m";
     }
 }
